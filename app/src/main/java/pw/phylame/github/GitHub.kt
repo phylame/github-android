@@ -1,0 +1,313 @@
+package pw.phylame.github
+
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import okhttp3.Credentials
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import java.util.*
+
+open class User : RealmObject() {
+    @PrimaryKey
+    var id: Int = 0
+
+    var type: String? = null
+
+    @SerializedName("avatar_url")
+    var avatar: String? = null
+
+    @SerializedName("login")
+    var username: String? = null
+
+    var bio: String? = null
+
+    var name: String? = null
+
+    var blog: String? = null
+
+    var email: String? = null
+
+    var company: String? = null
+
+    var location: String? = null
+
+    @SerializedName("created_at")
+    var createTime: Date? = null
+
+    @SerializedName("updated_at")
+    var updateTime: Date? = null
+
+    var stars: Int = 0
+
+    var following: Int = 0
+
+    var followers: Int = 0
+
+    @SerializedName("disk_usage")
+    var diskUsage: Int = 0
+
+    @SerializedName("public_repos")
+    var publicRepos: Int = 0
+
+    @SerializedName("total_private_repos")
+    var totalPrivateRepos: Int = 0
+
+    @SerializedName("owned_private_repos")
+    var ownedPrivateRepos: Int = 0
+
+    @SerializedName("public_gists")
+    var publicGists: Int = 0
+
+    @SerializedName("private_gists")
+    var privateGists: Int = 0
+}
+
+open class Repository : RealmObject() {
+    @PrimaryKey
+    var id: Int = 0
+
+    var name: String? = null
+
+    var language: String? = null
+
+    var homepage: String? = null
+
+    var description: String? = null
+
+    var username: String? = null
+
+    @SerializedName("full_name")
+    var fullName: String? = null
+
+    @SerializedName("fork")
+    var isFork: Boolean = false
+
+    @SerializedName("private")
+    var isPrivate: Boolean = false
+
+    @SerializedName("pushed_at")
+    var pushTime: Date? = null
+
+    @SerializedName("created_at")
+    var createTime: Date? = null
+
+    @SerializedName("updated_at")
+    var updateTime: Date? = null
+
+    @SerializedName("forks_count")
+    var forks: Int = 0
+
+    @SerializedName("stargazers_count")
+    var stargazers: Int = 0
+
+    @SerializedName("subscribers_count")
+    var subscribers: Int = 0
+}
+
+open class Issue : RealmObject() {
+    @PrimaryKey
+    var id: Int = 0
+
+    var number: Int = 0
+
+    var title: String? = null
+
+    var state: String? = null
+
+    @SerializedName("locked")
+    var isLocked: Boolean = false
+
+    var body: String? = null
+
+    var comments: Int = 0
+
+    @SerializedName("created_at")
+    var createTime: Date? = null
+
+    @SerializedName("updated_at")
+    var updateTime: Date? = null
+
+    @SerializedName("closed_at")
+    var closeTime: Date? = null
+}
+
+open class PageParams(var offset: Int = 1, var limit: Int = 16) {
+    open fun toMap(): MutableMap<String, String> = mutableMapOf(
+            "page" to offset.toString(),
+            "per_page" to limit.toString()
+    )
+}
+
+class RepoParams(var visibility: String = "",
+                 var affiliation: String = "",
+                 var type: String = "",
+                 var sort: String = "",
+                 var direction: String = "") : PageParams(0, 0) {
+    override fun toMap(): MutableMap<String, String> {
+        val map = super.toMap()
+        if (visibility.isNotEmpty()) {
+            map["visibility"] = visibility
+        }
+        if (affiliation.isNotEmpty()) {
+            map["affiliation"] = affiliation
+        }
+        if (type.isNotEmpty()) {
+            map["type"] = type
+        }
+        if (sort.isNotEmpty()) {
+            map["sort"] = sort
+        }
+        if (direction.isNotEmpty()) {
+            map["direction"] = direction
+        }
+        return map
+    }
+
+}
+
+private interface GitHubService {
+    @GET("/user")
+    fun login(): Observable<User>
+
+    @GET("/users/{username}")
+    fun getUser(@Path("username") username: String): Observable<User>
+
+    @GET("/users/{username}/repos")
+    fun getRepository(@Path("username") username: String, @QueryMap params: Map<String, String>): Observable<List<Repository>>
+}
+
+object GitHub {
+    private const val BASE_URL = "https://api.github.com/"
+
+    private val userRealm: Realm by lazy {
+        Realm.getInstance(RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .name("users.realm")
+                .build())
+    }
+
+    private val repoRealm: Realm by lazy {
+        Realm.getInstance(RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .name("repos.realm")
+                .build())
+    }
+
+    private val realmGson: Gson by lazy {
+        GsonBuilder().setExclusionStrategies(object : ExclusionStrategy {
+            override fun shouldSkipClass(clazz: Class<*>?): Boolean = false
+
+            override fun shouldSkipField(f: FieldAttributes): Boolean = f.declaringClass === RealmObject::class.java
+        }).create()
+    }
+
+    private var authToken: String? = App.githubPreferences.getString("authToken", null)
+
+    private lateinit var apiService: GitHubService
+
+    init {
+        if (!authToken.isNullOrEmpty()) {
+            apiService = getService(authToken!!)
+        }
+    }
+
+    private fun getService(token: String): GitHubService = Retrofit.Builder()
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+            .addConverterFactory(GsonConverterFactory.create(realmGson))
+            .client(OkHttpClient.Builder()
+                    .addInterceptor {
+                        it.proceed(it.request().newBuilder()
+                                .header("Authorization", token)
+                                .build())
+                    }
+                    .build())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(GitHubService::class.java)
+
+    val isSignedIn get() = !App.githubPreferences.getString("authToken", null).isNullOrEmpty()
+
+    fun login(username: String, password: String): Observable<User> {
+        if (!authToken.isNullOrEmpty()) {
+            throw IllegalStateException("Already signed in")
+        }
+        return Observable.create<String> {
+            it.onNext(Credentials.basic(username, password))
+            it.onCompleted()
+        }.subscribeOn(Schedulers.computation())
+                .flatMap { token ->
+                    val service = getService(token)
+                    service.login()
+                            .doOnNext { user ->
+                                if (user != null) {
+                                    apiService = service
+                                    @Suppress("CommitPrefEdits")
+                                    App.githubPreferences
+                                            .edit()
+                                            .putString("authToken", token)
+                                            .putString("username", user.username)
+                                            .commit()
+                                }
+                            }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getUser(username: String): Observable<User> {
+        val realm = userRealm
+        val user = realm.where(User::class.java)
+                .equalTo("username", username)
+                .findFirst()
+        return if (user != null) {
+            Observable.just(user)
+        } else {
+            apiService.getUser(username)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext { user ->
+                        //                        App.schedule {
+//                            realm.beginTransaction()
+//                            realm.copyToRealmOrUpdate(user)
+//                            realm.commitTransaction()
+//                        }
+                    }
+        }
+    }
+
+    fun getRepository(username: String): Observable<List<Repository>> {
+        val realm = repoRealm
+        val repos = realm.where(Repository::class.java)
+                .equalTo("username", username)
+                .findAll()
+        return if (repos.isNotEmpty()) {
+            Observable.just(repos)
+        } else {
+            apiService.getRepository(username, emptyMap())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext { repos ->
+                        for (repo in repos) {
+                            repo.username = username
+                        }
+                        //                        App.schedule {
+//                            realm.beginTransaction()
+//                            realm.copyToRealmOrUpdate(repos)
+//                            realm.commitTransaction()
+//                        }
+                    }
+        }
+    }
+}

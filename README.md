@@ -1,2 +1,2 @@
 # github-android
-GitHub client for Android L or later.
+GitHub client for Android KK or later.

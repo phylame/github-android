@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportHeight="16"
+    android:viewportWidth="16">
+    <group android:name="star">
+        <path
+            android:name="Shape"
+            android:fillColor="#000000"
+            android:fillType="evenOdd"
+            android:pathData="M14,6 L9.1,5.36 L7,1 L4.9,5.36 L0,6 L3.6,9.26 L2.67,14 L7,11.67 L11.33,14 L10.4,9.26z"
+            android:strokeColor="#00000000"
+            android:strokeWidth="1" />
+    </group>
+</vector>

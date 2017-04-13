@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_repository"
+            android:checked="true"
+            android:icon="@drawable/ic_github_repo"
+            android:title="@string/repositories" />
+        <item
+            android:id="@+id/nav_issue"
+            android:icon="@drawable/ic_github_issue_opened"
+            android:title="@string/issues" />
+        <item
+            android:id="@+id/nav_trends"
+            android:icon="@drawable/ic_github_flame"
+            android:title="@string/trends" />
+        <item
+            android:id="@+id/nav_gist"
+            android:icon="@drawable/ic_github_gist"
+            android:title="@string/gist" />
+    </group>
+    <item android:title="@string/others">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_github_info"
+                android:title="@string/about" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_github_gear"
+                android:title="@string/settings" />
+        </menu>
+    </item>
+</menu>

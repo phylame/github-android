@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activity.LoginActivity">
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/headerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:drawablePadding="4dp"
+        android:drawableTop="@drawable/ic_github_logo"
+        android:text="@string/sign_in_title"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="22sp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="16dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/loginView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_github_person"
+            android:hint="@string/prompt_login"
+            android:imeOptions="actionNext"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/passwordView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_github_lock"
+            android:hint="@string/password"
+            android:imeActionLabel="@string/sign_in"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/submit"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="16dp"
+        android:text="@string/sign_in"
+        android:textStyle="bold" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="@string/version_info"
+        android:textColor="?android:attr/textColorPrimary" />
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="16"
+    android:viewportWidth="16">
+    <group android:name="sign-out">
+        <path
+            android:name="Shape"
+            android:fillColor="#000000"
+            android:fillType="evenOdd"
+            android:pathData="M12,9 L12,7 L8,7 L8,5 L12,5 L12,3 L16,6 L12,9 L12,9 Z M10,12 L6,12 L6,3 L2,1 L10,1 L10,4 L11,4 L11,1 C11,0.45 10.55,0 10,0 L1,0 C0.45,0 0,0.45 0,1 L0,12.38 C0,12.77 0.22,13.11 0.55,13.29 L6,16.01 L6,13 L10,13 C10.55,13 11,12.55 11,12 L11,8 L10,8 L10,12 L10,12 Z"
+            android:strokeColor="#00000000"
+            android:strokeWidth="1" />
+    </group>
+</vector>

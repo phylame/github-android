@@ -1,0 +1,307 @@
+[
+  {
+    "name": "All Language",
+    "path": "",
+    "short_name": "All"
+  },
+  {
+    "name": "Unknown",
+    "path": "unknown"
+  },
+  {
+    "color": "#882B0F",
+    "name": "ActionScript",
+    "path": "as3",
+    "short_name": "AS"
+  },
+  {
+    "name": "ApacheConf",
+    "path": "apacheconf"
+  },
+  {
+    "color": "#6E4C13",
+    "name": "Assembly",
+    "path": "nasm",
+    "short_name": "NASM"
+  },
+  {
+    "name": "Batchfile",
+    "path": "bat",
+    "short_name": "BAT"
+  },
+  {
+    "color": "#555555",
+    "name": "C",
+    "path": "c"
+  },
+  {
+    "name": "C#",
+    "path": "csharp"
+  },
+  {
+    "name": "C++",
+    "path": "cpp"
+  },
+  {
+    "name": "CMake",
+    "path": "cmake"
+  },
+  {
+    "color": "#563d7c",
+    "name": "CSS",
+    "path": "css"
+  },
+  {
+    "color": "#db5855",
+    "name": "Clojure",
+    "path": "clojure"
+  },
+  {
+    "color": "#244776",
+    "name": "CoffeeScript",
+    "path": "coffeescript"
+  },
+  {
+    "color": "#3fb68b",
+    "name": "Common Lisp",
+    "path": "common-lisp",
+    "short_name": "Lisp"
+  },
+  {
+    "color": "#776791",
+    "name": "Crystal",
+    "path": "crystal"
+  },
+  {
+    "color": "#ba595e",
+    "name": "D",
+    "path": "d"
+  },
+  {
+    "color": "#00B4AB",
+    "name": "Dart",
+    "path": "dart"
+  },
+  {
+    "color": "#6e4a7e",
+    "name": "Elixir",
+    "path": "elixir"
+  },
+  {
+    "color": "#c065db",
+    "name": "Emacs Lisp",
+    "path": "emacs-lisp",
+    "short_name": "Lisp"
+  },
+  {
+    "color": "#B83998",
+    "name": "Erlang",
+    "path": "erlang"
+  },
+  {
+    "color": "#b845fc",
+    "name": "F#",
+    "path": "fsharp"
+  },
+  {
+    "color": "#8fb200",
+    "name": "Game Maker Language",
+    "path": "game-maker-language",
+    "short_name": "GML"
+  },
+  {
+    "color": "#375eab",
+    "name": "Go",
+    "path": "go"
+  },
+  {
+    "color": "#e69f56",
+    "name": "Groovy",
+    "path": "groovy"
+  },
+  {
+    "color": "#e44b23",
+    "name": "HTML",
+    "path": "html"
+  },
+  {
+    "color": "#29b544",
+    "name": "Haskell",
+    "path": "haskell"
+  },
+  {
+    "color": "#df7900",
+    "name": "Haxe",
+    "path": "haxe"
+  },
+  {
+    "name": "Inno Setup",
+    "path": "inno-setup",
+    "short_name": "Inno"
+  },
+  {
+    "color": "#b07219",
+    "name": "Java",
+    "path": "java"
+  },
+  {
+    "color": "#f1e05a",
+    "name": "JavaScript",
+    "path": "javascript",
+    "short_name": "JS"
+  },
+  {
+    "color": "#a270ba",
+    "name": "Julia",
+    "path": "julia"
+  },
+  {
+    "color": "#F18E33",
+    "name": "Kotlin",
+    "path": "kotlin"
+  },
+  {
+    "color": "#499886",
+    "name": "LiveScript",
+    "path": "livescript",
+    "short_name": "LS"
+  },
+  {
+    "color": "#000080",
+    "name": "Lua",
+    "path": "lua"
+  },
+  {
+    "color": "#427819",
+    "name": "Makefile",
+    "path": "makefile"
+  },
+  {
+    "color": "#bb92ac",
+    "name": "Matlab",
+    "path": "matlab"
+  },
+  {
+    "name": "NSIS",
+    "path": "nsis"
+  },
+  {
+    "color": "#37775b",
+    "name": "Nimrod",
+    "path": "nimrod"
+  },
+  {
+    "color": "#3be133",
+    "name": "OCaml",
+    "path": "ocaml"
+  },
+  {
+    "color": "#438eff",
+    "name": "Objective-C",
+    "path": "objective-c",
+    "short_name": "Obj-C"
+  },
+  {
+    "color": "#6866fb",
+    "name": "Objective-C++",
+    "path": "objective-c%2B%2B",
+    "short_name": "Obj-C++"
+  },
+  {
+    "color": "#4F5D95",
+    "name": "PHP",
+    "path": "php"
+  },
+  {
+    "color": "#dad8d8",
+    "name": "PLSQL",
+    "path": "plsql"
+  },
+  {
+    "color": "#b0ce4e",
+    "name": "Pascal",
+    "path": "pascal"
+  },
+  {
+    "color": "#0298c3",
+    "name": "Perl",
+    "path": "perl"
+  },
+  {
+    "name": "PostScript",
+    "path": "postscript"
+  },
+  {
+    "name": "PowerShell",
+    "path": "powershell"
+  },
+  {
+    "color": "#3572A5",
+    "name": "Python",
+    "path": "python"
+  },
+  {
+    "color": "#44a51c",
+    "name": "QML",
+    "path": "qml"
+  },
+  {
+    "color": "#198ce7",
+    "name": "R",
+    "path": "r"
+  },
+  {
+    "color": "#701516",
+    "name": "Ruby",
+    "path": "ruby"
+  },
+  {
+    "color": "#dea584",
+    "name": "Rust",
+    "path": "rust"
+  },
+  {
+    "color": "#DC322F",
+    "name": "Scala",
+    "path": "scala"
+  },
+  {
+    "color": "#1e4aec",
+    "name": "Scheme",
+    "path": "scheme"
+  },
+  {
+    "color": "#89e051",
+    "name": "Shell",
+    "path": "bash"
+  },
+  {
+    "color": "#46390b",
+    "name": "SuperCollider",
+    "path": "supercollider"
+  },
+  {
+    "color": "#ffac45",
+    "name": "Swift",
+    "path": "swift"
+  },
+  {
+    "color": "#3D6117",
+    "name": "TeX",
+    "path": "tex"
+  },
+  {
+    "color": "#2b7489",
+    "name": "TypeScript",
+    "path": "typescript"
+  },
+  {
+    "color": "#b2b7f8",
+    "name": "Verilog",
+    "path": "verilog"
+  },
+  {
+    "name": "XSLT",
+    "path": "xslt"
+  }
+]

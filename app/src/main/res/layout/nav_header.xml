@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="user"
+            type="pw.phylame.github.User" />
+
+        <variable
+            name="tintColor"
+            type="int" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/nav_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_header_height">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/nav_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/info_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/nav_avatar"
+                    android:layout_width="@dimen/nav_avatar_size"
+                    android:layout_height="@dimen/nav_avatar_size"
+                    android:layout_marginStart="16dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.name}"
+                        android:textColor="@{tintColor}"
+                        android:textSize="18sp" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.username}"
+                        android:textColor="@{tintColor}"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/nav_stars"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/stars"
+                        android:textColor="@{tintColor}"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{String.valueOf(user.stars)}"
+                        android:textColor="@{tintColor}"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_followers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/followers"
+                        android:textColor="@{tintColor}"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{String.valueOf(user.followers)}"
+                        android:textColor="@{tintColor}"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_following"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/following"
+                        android:textColor="@{tintColor}"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{String.valueOf(user.following)}"
+                        android:textColor="@{tintColor}"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</layout>
