@@ -50,13 +50,40 @@
                 android:textSize="14sp" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Author:"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/author_avatar"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="4dp"
+                        app:srcCompat="@mipmap/ic_launcher" />
+                </LinearLayout>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/star_count"
@@ -76,15 +103,6 @@
                     android:drawablePadding="-3dp"
                     android:drawableStart="@drawable/ic_github_repo_forked"
                     android:text="@{String.valueOf(repo.forks)}"
-                    android:textColor="?android:attr/textColorSecondary" />
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/update_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:text="Updated 22 hours ago"
                     android:textColor="?android:attr/textColorSecondary" />
             </LinearLayout>
         </LinearLayout>

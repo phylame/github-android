@@ -1,0 +1,26 @@
+<resources>
+    <declare-styleable name="AppStyle">
+        <attr name="appbarStyle" format="reference" />
+    </declare-styleable>
+
+    <!-- Base application theme. -->
+    <style name="BaseTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="appbarStyle">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="android:actionBarSize">@dimen/action_bar_size</item>
+    </style>
+
+    <style name="BaseTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <item name="appbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:actionBarSize">@dimen/action_bar_size</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="BaseTheme.Dark" />
+
+    <style name="AppTheme.Light" parent="BaseTheme.Light" />
+</resources>

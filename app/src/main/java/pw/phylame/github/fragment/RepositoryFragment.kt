@@ -1,6 +1,5 @@
 package pw.phylame.github.fragment
 
-import android.annotation.SuppressLint
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.graphics.Rect
@@ -13,16 +12,12 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_repo.view.*
 import kotlinx.android.synthetic.main.repo_list_item.view.*
 import org.json.JSONArray
-import org.json.JSONObject
-import pw.phylame.github.App
-import pw.phylame.github.GitHub
-import pw.phylame.github.R
-import pw.phylame.github.Repository
+import pw.phylame.github.*
 import pw.phylame.github.databinding.RepoListItemBinding
 import pw.phylame.support.getStyledColor
+import pw.phylame.support.iterator
 import pw.phylame.support.tintDrawables
-import java.text.SimpleDateFormat
-import java.util.*
+import rx.Observer
 
 class RepositoryFragment : Fragment() {
     private var isLoaded = false
@@ -49,7 +44,7 @@ class RepositoryFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_repo, container, false)
         if (view != null) {
             view.swipe.setOnRefreshListener {
-                loadRepositories()
+                // todo refresh repos
             }
             initRecycler(view.recycler)
         }
@@ -87,14 +82,22 @@ class RepositoryFragment : Fragment() {
 
     fun loadRepositories() {
         val content = view!!
-        GitHub.getRepository("JakeWharton")
-                .subscribe({ repos ->
-                    adapter.reset(repos)
-                    content.swipe.isRefreshing = false
-                    content.placeholder.visibility = if (repos.isEmpty()) View.VISIBLE else View.GONE
-                }, { error ->
-                    error.printStackTrace()
-                    Toast.makeText(context, "Connection Error!", Toast.LENGTH_SHORT).show()
+        val params = RepoParams()
+        GitHub.getRepository("JakeWharton", params)
+                .subscribe(object : Observer<Repository> {
+                    override fun onNext(repo: Repository) {
+                        adapter.append(repo)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                        Toast.makeText(context, R.string.error_network_connection, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onCompleted() {
+                        content.swipe.isRefreshing = false
+                        content.placeholder.visibility = if (adapter.size == 0) View.VISIBLE else View.GONE
+                    }
                 })
     }
 }
@@ -106,15 +109,13 @@ private class RepositoryHolder(val binding: RepoListItemBinding) : RecyclerView.
 private class RepositoryAdapter(val accentColor: Int, val username: String) : RecyclerView.Adapter<RepositoryHolder>() {
     private val styles by lazy {
         val m = HashMap<String, LanguageItem>()
-        App.openAssets("languages.json")
+        app.assets.open("languages.json")
                 .reader(Charsets.US_ASCII)
                 .use {
-                    val jsonArray = JSONArray(it.readText())
-                    for (i in 0..jsonArray.length() - 1) {
-                        val obj = jsonArray.get(i) as JSONObject
-                        val spec = obj.optString("color", null)
+                    for (obj in JSONArray(it.readText())) {
+                        val color = obj.optString("color", null)
                         m[obj.getString("name")] =
-                                LanguageItem(obj.optString("short_name", null), if (spec.isNullOrEmpty()) null else Color.parseColor(spec))
+                                LanguageItem(obj.optString("short_name", null), if (color.isNullOrEmpty()) null else Color.parseColor(color))
                     }
                 }
         m
@@ -157,50 +158,8 @@ private class RepositoryAdapter(val accentColor: Int, val username: String) : Re
         view.star_count.tintDrawables()
         view.forked_count.tintDrawables()
 
-        if (repo.pushTime != null) {
-            view.update_info.visibility = View.VISIBLE
-            view.update_info.text = dateDiff(repo.pushTime!!)
-        } else {
-            view.update_info.visibility = View.GONE
-        }
-
         val style = styles[repo.language]
         view.label.setBackgroundColor(style?.color ?: accentColor)
         view.label.text = style?.alias ?: repo.language ?: "N/A"
     }
-
-    fun dateDiff(date: Date): String {
-        val now = Calendar.getInstance()
-        val spec = Calendar.getInstance()
-        spec.time = date
-
-        val v = now.timeInMillis - date.time
-        println("$v, ${v / 1000.0/60/24}")
-
-        var diff = now[Calendar.YEAR] - spec[Calendar.YEAR]
-        if (diff > 0) {
-            return App.getString(R.string.update_info_on, formatDate(date, "yyyy-M-d"))
-        }
-        diff = now[Calendar.MONTH] - spec[Calendar.MONTH]
-        if (diff > 0) {
-            return App.getString(R.string.update_info_on, formatDate(date, "M-d"))
-        }
-        diff = now[Calendar.DAY_OF_MONTH] - spec[Calendar.DAY_OF_MONTH]
-        if (diff > 0) {
-            return App.getString(R.string.update_info_day_ago, diff)
-        }
-        diff = now[Calendar.HOUR_OF_DAY] - spec[Calendar.HOUR_OF_DAY]
-        if (diff > 0) {
-            return App.getString(R.string.update_info_hour_ago, diff)
-        }
-        diff = now[Calendar.MINUTE] - spec[Calendar.MINUTE]
-        if (diff > 0) {
-            return App.getString(R.string.update_info_minute_ago, diff)
-        }
-        diff = now[Calendar.SECOND] - spec[Calendar.SECOND]
-        return App.getString(R.string.update_info_second_ago, diff)
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    fun formatDate(date: Date, pattern: String): String = SimpleDateFormat(pattern).format(date)
 }

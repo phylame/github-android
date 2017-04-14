@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">GitHub</string>
+
+    <string name="repositories">Repositories</string>
+    <string name="issues">Issues</string>
+    <string name="gist">Gist</string>
+
+    <string name="others">Others</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="password">Password</string>
+
+    <string name="stars">Stars</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="filter">Filter</string>
+    <string name="search">Search</string>
+    <string name="no_repositories">(No Repositories)</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_login">Username or email address</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="sign_in_title">Sign in to GitHub</string>
+    <string name="sign_in_loading">Signing in…</string>
+
+    <string name="version_info">GitHub v1.0 by PW</string>
+    <string name="trends">Trends</string>
+    <string name="login_error_unauthorized">Incorrect login or password</string>
+    <string name="error_network_connection">Network error</string>
+    <string name="error_internal_bug">App internal error</string>
+
+</resources>
