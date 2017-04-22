@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.WindowManager
 
@@ -33,6 +34,11 @@ abstract class BaseActivity : AppCompatActivity() {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
+    }
+
+    fun setupToolbar(toolbar: Toolbar, showHomeAsUp: Boolean = false) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(showHomeAsUp)
     }
 
     override fun onSupportNavigateUp(): Boolean {

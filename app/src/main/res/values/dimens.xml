@@ -8,5 +8,5 @@
     <dimen name="nav_header_height">184dp</dimen>
     <dimen name="nav_avatar_size">64dp</dimen>
 
-    <dimen name="repo_item_space">8dp</dimen>
+    <dimen name="repo_item_space">4dp</dimen>
 </resources>

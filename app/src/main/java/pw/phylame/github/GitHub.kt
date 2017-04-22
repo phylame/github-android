@@ -9,7 +9,6 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmObject
 import io.realm.Sort
-import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 import okhttp3.Credentials
 import okhttp3.OkHttpClient
@@ -91,9 +90,6 @@ open class Repository : RealmObject() {
 
     var description: String? = null
 
-    var username: String? = null
-
-    @Ignore
     @SerializedName("owner")
     var owner: User? = null
 
@@ -193,7 +189,7 @@ private interface GitHubService {
     fun getUser(@Path("username") username: String): Observable<User>
 
     @GET("/users/{username}/repos")
-    fun getRepository(@Path("username") username: String, @QueryMap params: Map<String, String>): Observable<List<Repository>>
+    fun getRepository(@Path("username") username: String, @QueryMap params: Map<String, String>?): Observable<List<Repository>>
 }
 
 object GitHub {
@@ -231,24 +227,34 @@ object GitHub {
 
     private lateinit var apiService: GitHubService
 
+    val isSignedIn get() = !app.githubPreferences.getString("authToken", null).isNullOrEmpty()
+
     init {
         if (!authToken.isNullOrEmpty()) { // already signed in
             apiService = createService(authToken!!)
         }
     }
 
-    val isSignedIn get() = !app.githubPreferences.getString("authToken", null).isNullOrEmpty()
+    private fun cacheUser(user: User) {
+        val realm = userCache
+        realm.beginTransaction()
+        realm.insertOrUpdate(user)
+        realm.commitTransaction()
+    }
+
+    private fun cacheRepository(repo: Repository) {
+        val realm = repoCache
+        realm.beginTransaction()
+        realm.insertOrUpdate(repo)
+        realm.commitTransaction()
+    }
 
     private fun createService(token: String): GitHubService = Retrofit.Builder()
             .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(GsonConverterFactory.create(realmGson))
-            .client(OkHttpClient.Builder()
-                    .addInterceptor {
-                        it.proceed(it.request().newBuilder()
-                                .header("Authorization", token)
-                                .build())
-                    }
-                    .build())
+            .client(OkHttpClient.Builder().addInterceptor {
+                it.proceed(it.request().newBuilder().header("Authorization", token).build())
+            }.build())
             .baseUrl(BASE_URL)
             .build()
             .create(GitHubService::class.java)
@@ -266,16 +272,13 @@ object GitHub {
                     service.login()
                             .doOnNext { user ->
                                 if (user != null) {
+                                    cacheUser(user)
                                     apiService = service
-                                    @Suppress("CommitPrefEdits")
                                     app.githubPreferences
                                             .edit()
                                             .putString("authToken", token)
                                             .putString("username", user.username)
                                             .commit()
-                                    userCache.executeTransaction { realm ->
-                                        realm.copyToRealmOrUpdate(user)
-                                    }
                                 }
                             }
                 }
@@ -283,37 +286,29 @@ object GitHub {
     }
 
     fun fetchUser(username: String): Observable<User> = apiService.getUser(username)
-            .doOnNext { user ->
-                println("fetchUser.doOnNext: ${Thread.currentThread()}")
-                userCache.executeTransaction { realm ->
-                    realm.copyToRealmOrUpdate(user)
-                }
-            }
+            .doOnNext(this::cacheUser)
 
-    fun getUser(username: String): Observable<User> = userCache.where(User::class.java)
-            .equalTo("username", username)
-            .findFirstAsync()
-            .asObservable<User>()
-            .flatMap { user ->
-                if (user != null) {
-                    Observable.just(user)
-                } else {
-                    fetchUser(username)
-                }
-            }.observeOn(AndroidSchedulers.mainThread())
+    fun getUser(username: String): Observable<User> {
+        val user = userCache.where(User::class.java)
+                .equalTo("username", username)
+                .findFirst()
+        return if (user != null) {
+            Observable.just(user)
+        } else {
+            fetchUser(username)
+        }
+    }
 
-    fun fetchRepository(username: String, params: RepoParams?): Observable<Repository> {
-        return apiService.getRepository(username, params?.toMap() ?: emptyMap())
-                .flatMap { Observable.from(it) }
-                .doOnNext { repo ->
-                    repo.username = username
-                    repoCache.executeTransaction { realm ->
-                        realm.copyToRealmOrUpdate(repo)
+    fun fetchRepository(username: String, params: RepoParams?): Observable<List<Repository>> {
+        return apiService.getRepository(username, params?.toMap())
+                .doOnNext { repos ->
+                    for (repo in repos) {
+                        cacheRepository(repo)
                     }
                 }
     }
 
-    fun getRepository(username: String, params: RepoParams?): Observable<Repository> {
+    fun getRepository(username: String, params: RepoParams?): Observable<out List<Repository>> {
         val sort = when (params?.sort) {
             "created" -> "createTime"
             "updated" -> "updateTime"
@@ -327,21 +322,20 @@ object GitHub {
             "desc" -> Sort.DESCENDING
             else -> throw IllegalArgumentException("direction must be 'asc' or 'desc'")
         }
-        val query = repoCache.where(Repository::class.java).equalTo("username", username)
-        return if (sort != null) {
+        val query = repoCache.where(Repository::class.java).equalTo("owner.username", username)
+        val repos = if (sort != null) {
             if (order != null) {
-                query.findAllSortedAsync(sort, order)
+                query.findAllSorted(sort, order)
             } else {
-                query.findAllSortedAsync(sort)
-            }.asObservable()
-        } else {
-            query.findAllAsync().asObservable()
-        }.flatMap { repos ->
-            if (repos.isNotEmpty()) {
-                Observable.from(repos)
-            } else {
-                fetchRepository(username, params)
+                query.findAllSorted(sort)
             }
-        }.observeOn(AndroidSchedulers.mainThread())
+        } else {
+            query.findAll()
+        }
+        return if (repos.isNotEmpty()) {
+            Observable.just(repos)
+        } else {
+            fetchRepository(username, params)
+        }
     }
 }

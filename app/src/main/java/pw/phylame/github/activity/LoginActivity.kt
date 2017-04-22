@@ -35,7 +35,7 @@ class LoginActivity : BaseActivity() {
         }
 
         passwordView.tintDrawables()
-        passwordView.setOnEditorActionListener({ view, id, _ ->
+        passwordView.setOnEditorActionListener({ view, _, _ ->
             if (view.text.isEmpty()) {
                 view.error = getString(R.string.error_field_required)
             } else {
